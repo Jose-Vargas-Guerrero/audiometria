@@ -1,0 +1,57 @@
+.Main{
+    height: 100vh;
+    width: 100vw;
+    padding-top: 2rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.Main > h1 {
+    font-size: 3rem;
+}
+
+.buttonsContainer{
+    margin-top: 7rem;
+    width: 100vw;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+
+.button{
+    height: 300px;
+    width: 300px;
+    cursor: pointer;
+    border: none;
+    border-radius: 20px;
+    transition: box-shadow ease-in 0.1s;
+}
+
+.button:hover{
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.button > p {
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.Pacientes{
+    background-color: #A7C957;
+}
+
+.Examenes{
+    background-color: #689689;
+}
+
+.Historial{
+    background-color: #FFBE0B;
+}
