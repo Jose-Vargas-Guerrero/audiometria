@@ -5,7 +5,7 @@ const dbConfig = {
     user: 'usersql4',
     password: '123456',
     server: 'localhost',
-    database: 'centoOtaudiologicoSur',
+    database: 'centroOtaudiologicoSur',
     options: {
         encrypt: true,
         trustServerCertificate: true,
