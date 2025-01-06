@@ -1,0 +1,106 @@
+.examenesContainer{
+    padding: 2rem 0;
+    height: auto;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.examenesContainer  >h1{
+    font-size: 3rem;
+    margin: 1rem 0;
+}
+
+.inputFile{
+    margin: 2rem 0;
+}
+
+.shadow{
+    background-color: #689689c3;
+    border-radius: 15px;
+    padding: 2rem 2rem;
+}
+
+.preview{
+    height: auto;
+    width: 300px;
+}
+
+.examenInfo{
+    width: 50%;
+    padding: 3rem 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.examenInfo > input {
+    padding: 0.3rem 0.5rem;
+    margin: 1rem 0;
+    width: 30%;
+    text-align: center;
+    cursor: pointer;
+}
+
+.examenInfo > textarea {
+    margin: 1rem 0;
+    height: 100px;
+    width: 60%;
+}
+
+.examenInfo > label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.buscador {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    width: 280px;
+    padding: 0.2rem 2rem;
+}
+
+.paciente > h3{
+    margin-top: 2rem;
+    font-size: 1.3rem;
+}
+
+.buscarPaciente{
+    background-color: #04AA6D;
+    color: white;
+    padding: 0.4rem 2rem;
+    margin: 0 1rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.resultado{
+    font-weight: bold;
+}
+
+.resultado > p {
+    margin: 0.2rem 0;
+}
+
+.guardar{
+    border: none;
+    margin: 2rem 0;
+    padding: 0.3rem 2rem;
+    background-color: #29bf12;
+    color: white;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.paciente{
+    text-align: center;
+}
+

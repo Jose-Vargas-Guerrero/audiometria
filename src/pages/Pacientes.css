@@ -52,3 +52,15 @@ fieldset > label{
     font-size: 1.1rem;
     padding: 0.3rem 0.3rem;
 }
+
+.iconHome{
+    height: 50px;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.iconHome:hover{
+    transform: scale(1.2);
+}

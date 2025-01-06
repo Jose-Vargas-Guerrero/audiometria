@@ -7,7 +7,7 @@ import historial from "../images/clipboard-data.png";
 function Inicio() {
   return (
     <div className="Main">
-      <h1>Sistema Clinica (nombre)</h1>
+      <h1>Sistema Centro Otaudiológico del Sur</h1>
       <div className="buttonsContainer">
         <button className="button Pacientes">
           <Link to="/pacientes">

@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import './Pacientes.css'
+import Home from './Home'
 
 function Pacientes() {
   const [formulario, setFormulario] = useState({
-    NombrePaciente: "",
-    /* identidad: "", */
+    nombrePaciente: "",
+    identidadPaciente: "",
     fechaNacimiento: "",
     sexo: "",
     estadoCivil: "",
@@ -54,18 +55,19 @@ function Pacientes() {
   return (
     <>
     <div className="pacientesPage">
+      <Home/>
       <h1>Registro de paciente</h1>
       <form className='formularioPacientes' onSubmit={handleSubmit}>
         <label>Nombre</label>
-        <input required id='NombrePaciente' name='NombrePaciente' value={formulario.NombrePaciente} 
+        <input required id='nombrePaciente' name='nombrePaciente' value={formulario.nombrePaciente} 
         onChange={handleName}
         placeholder='nombre completo'
         />
-        {/* <label>Identidad</label>
-        <input id='identidad' name='identidad' value={formulario.identidad}
+        <label>Numero de identidad</label>
+        <input required id='identidadPaciente' name='identidadPaciente' value={formulario.identidadPaciente}
         onChange={handleInput}
         placeholder='ingrese la identidad'
-        /> */}
+        /> 
         <label>fecha nacimiento</label>
         <input required type='date' id='fechaNacimiento' name='fechaNacimiento' value={formulario.fechaNacimiento}
         onChange={handleInput}
