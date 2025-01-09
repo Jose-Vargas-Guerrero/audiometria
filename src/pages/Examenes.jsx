@@ -4,7 +4,7 @@ import { useState } from "react";
 import Reporte from "./document/Reporte";
 import Home from "./Home";
 
-const fileTypes = ["JPG", "PNG", "GIF  "];
+const fileTypes = ["JPG", "PNG", "GIF"];
 
 function Examenes() {
   const [file, setFile] = useState(null);
@@ -12,27 +12,34 @@ function Examenes() {
   const handleChange = (file) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      setFile(reader.result); // Guardar la imagen como base64
+      setFile(reader.result);
     };
-    reader.readAsDataURL(file); // Convertir a base64
+    reader.readAsDataURL(file);
   };
 
-  //informacion de examen
+  const getCurrentDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  // Información de examen
   const [examen, setExamen] = useState({
-    nombre: "abdul",
+    nombre: "",
     edad: 0,
-    fechaExamen: "",
+    fechaExamen: getCurrentDate(),
     observaciones: "",
     recomendaciones: "",
     idPaciente: null,
   });
-
   const handleInput = (e) => {
     const { name, value } = e.target;
-    setExamen({
-      ...examen,
+    setExamen((prevState) => ({
+      ...prevState,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -44,19 +51,16 @@ function Examenes() {
   const [resultado, setResultado] = useState(null);
   const [error, setError] = useState("");
 
-  //buscar paciente por el numero de identidad
   const handleSearch = async () => {
     try {
-      const cleanIdentidad = identidadPaciente.trim()
+      const cleanIdentidad = identidadPaciente.trim();
       const response = await fetch(
         `http://localhost:5000/api/pacientes/${cleanIdentidad}`
       );
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
         setResultado(data);
-        console.log("este es el estado resultado:", resultado)
-        setError(""); // Limpia errores previos
+        setError("");
       } else {
         setResultado(null);
         setError("Paciente no encontrado");
@@ -69,27 +73,25 @@ function Examenes() {
 
   const handleSubmitExamen = async (e) => {
     e.preventDefault();
-  
-    // Validar que haya un paciente seleccionado
+
     if (!resultado?.idPaciente) {
       alert("Debe buscar y seleccionar un paciente antes de guardar el examen");
       return;
     }
-  
-    // Validar que el archivo exista
+
     if (!file) {
       alert("Debe cargar un archivo PDF del examen");
       return;
     }
-  
-    // Preparar datos para enviar
+
     const examenData = {
-      idExamenPaciente: resultado.idPaciente, // ID del paciente
-      examen: file, //imagen del examen
+      idExamenPaciente: resultado.idPaciente,
+      examen: file,
+      fechaExamen: examen.fechaExamen,
       observaciones: examen.observaciones,
       recomendaciones: examen.recomendaciones,
     };
-  
+
     try {
       const response = await fetch("http://localhost:5000/api/examenes", {
         method: "POST",
@@ -98,14 +100,14 @@ function Examenes() {
         },
         body: JSON.stringify(examenData),
       });
-  
+
       if (response.ok) {
         alert("Examen guardado correctamente");
-        setFile(null); // Limpiar el archivo cargado
+        setFile(null);
         setExamen({
           nombre: "",
           edad: 0,
-          fechaExamen: "",
+          fechaExamen: getCurrentDate(),
           observaciones: "",
           recomendaciones: "",
           idPaciente: null,
@@ -116,32 +118,32 @@ function Examenes() {
       }
     } catch (error) {
       console.error("Error al enviar los datos del examen:", error);
-      alert("Hubo un error al guardar el examen. Por favor, intente nuevamente.");
+      alert(
+        "Hubo un error al guardar el examen. Por favor, intente nuevamente."
+      );
     }
   };
-  
-
-  
-  
 
   return (
     <>
       <div className="examenesContainer">
-        <Home/>
+        <Home />
         <h1>Registro de examenes</h1>
         <div className="paciente">
           <h3>Agregar Paciente</h3>
           <input
             className="buscador"
             type="text"
-            placeholder="Ingresar sin guiones"
+            placeholder="Identidad sin guiones"
             value={identidadPaciente}
             name="identidadPaciente"
             id="identidadPaciente"
             required
             onChange={(e) => setIdentidadPaciente(e.target.value)}
           />
-          <button onClick={handleSearch} className="buscarPaciente">Buscar</button>
+          <button onClick={handleSearch} className="buscarPaciente">
+            Buscar
+          </button>
 
           {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -161,9 +163,6 @@ function Examenes() {
             types={fileTypes}
             uploadedLabel="Imagen Subida"
           />
-          {/*           <p>
-            {file ? `Nombre de archivo: ${file.name}` : "sin archivos subidos"}
-          </p> */}
         </div>
         {file && (
           <div className="shadow">
@@ -177,15 +176,17 @@ function Examenes() {
             type="date"
             id="fechaExamen"
             name="fechaExamen"
-            placeholder="ingrese la fecha de el examen"
+            value={examen.fechaExamen}
             onChange={handleInput}
           />
+
           <label>Observaciones</label>
           <textarea
             required
             className="observaciones"
             id="observaciones"
             name="observaciones"
+            value={examen.observaciones}
             onChange={handleInput}
           />
           <label>Recomendaciones</label>
@@ -194,10 +195,10 @@ function Examenes() {
             className="recomendaciones"
             id="recomendaciones"
             name="recomendaciones"
+            value={examen.recomendaciones}
             onChange={handleInput}
           />
         </form>
-        {/* mostrara el componente reporte si se carga una imagen */}
         {file ? (
           <Reporte
             nombre={resultado.nombrePaciente}

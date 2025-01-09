@@ -1,15 +1,29 @@
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import Reporte from "./document/Reporte";
 import Home from "./Home";
-import './historial.css';
+import "./historial.css";
 
 function Historial() {
   const [examenes, setExamenes] = useState([]);
   const [identidadPaciente, setIdentidadPaciente] = useState("");
+  const [nombrePaciente, setNombrePaciente] = useState("");
+  const [isBusquedaPorNombre, setIsBusquedaPorNombre] = useState(false);
 
-  const fetchExamenes = async (identidad) => {
+  useEffect(() => {
+    fetchExamenes(); // Fetch all exams on component mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchExamenes = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/examenes/${identidad}`);
+      const query = isBusquedaPorNombre ? nombrePaciente : identidadPaciente;
+      const type = isBusquedaPorNombre ? "nombre" : "identidad";
+
+      const response = await fetch(
+        `http://localhost:5000/api/examenes${
+          query ? `?query=${query}&type=${type}` : ""
+        }`
+      );
       if (response.ok) {
         const data = await response.json();
         setExamenes(data);
@@ -21,24 +35,8 @@ function Historial() {
     }
   };
 
-  const handleDelete = async (idExamen) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/examenes/${idExamen}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setExamenes(examenes.filter((examen) => examen.idExamen !== idExamen));
-        window.alert("examen eliminado correctamente")
-      } else {
-        console.error("Error al eliminar el examen:", await response.text());
-      }
-    } catch (error) {
-      console.error("Error al conectar con el servidor:", error);
-    }
-  };
-
   const handleSearch = () => {
-    fetchExamenes(identidadPaciente);
+    fetchExamenes();
   };
 
   return (
@@ -47,41 +45,58 @@ function Historial() {
       <h1>Registro de Exámenes</h1>
 
       <div className="searchContainer">
+        <button className="todos" onClick={handleSearch}>
+          todos
+        </button>
         <input
           className="buscadorHistorial"
           type="text"
-          placeholder="Ingrese número de identidad"
-          value={identidadPaciente}
-          onChange={(e) => setIdentidadPaciente(e.target.value)}
+          placeholder={
+            isBusquedaPorNombre
+              ? "Ingrese nombre del paciente"
+              : "Ingrese número de identidad"
+          }
+          value={isBusquedaPorNombre ? nombrePaciente : identidadPaciente}
+          onChange={(e) =>
+            isBusquedaPorNombre
+              ? setNombrePaciente(e.target.value)
+              : setIdentidadPaciente(e.target.value)
+          }
         />
-        <button className="buscarHistorial" onClick={handleSearch}>Buscar</button>
+        <button className="buscarHistorial" onClick={handleSearch}>
+          Buscar
+        </button>
+        <label>
+          <input
+            type="checkbox"
+            checked={isBusquedaPorNombre}
+            onChange={() => setIsBusquedaPorNombre(!isBusquedaPorNombre)}
+          />
+          Buscar por nombre
+        </label>
       </div>
-      {examenes.length > 0 ? (
-        examenes.map((examen) => (
-          <div key={examen.idExamen} className="examenBody">
-            <h3 className="titleImportant">Examen de Paciente {examen.idExamenPaciente}</h3>
-            <p>Nombre: {examen.nombrePaciente}</p>
-            <p>Identidad: {examen.identidadPaciente}</p>
-            <p>Edad: {examen.edad} años</p>
-            <strong className="titleImportant">Observaciones:</strong>
-            <p className="observaciones">{examen.observaciones}</p>
-            <strong className="titleImportant">Recomendaciones:</strong>
-            <p className="recomendaciones">{examen.recomendaciones}</p>
-            <img src={examen.examen} alt="Examen" />
-            <Reporte
-              nombre={examen.nombrePaciente}
-              edad={examen.edad}
-              fecha={examen.fecha}
-              observaciones={examen.observaciones}
-              recomendaciones={examen.recomendaciones}
-              imagen={examen.examen}
-            />
-            <button className="eliminar" onClick={() => handleDelete(examen.idExamen)}>Eliminar</button>
-          </div>
-        ))
-      ) : (
-        <p>No hay exámenes registrados</p>
-      )}
+
+      <div className="gridContainer">
+        {examenes.length > 0 ? (
+          examenes.map((examen) => (
+            <div key={examen.idExamen} className="gridItem">
+              <p>Nombre: {examen.nombrePaciente}</p>
+              <p>Fecha: {new Date(examen.fecha).toLocaleDateString()}</p>
+              <p>Observaciones: {examen.observaciones}</p>
+              <Reporte
+                nombre={examen.nombrePaciente}
+                edad={examen.edad}
+                fecha={examen.fecha}
+                observaciones={examen.observaciones}
+                recomendaciones={examen.recomendaciones}
+                imagen={examen.examen}
+              />
+            </div>
+          ))
+        ) : (
+          <p>No hay exámenes registrados</p>
+        )}
+      </div>
     </div>
   );
 }

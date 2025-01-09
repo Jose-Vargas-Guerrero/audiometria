@@ -64,3 +64,112 @@ fieldset > label{
 .iconHome:hover{
     transform: scale(1.2);
 }
+
+.examenesContainer {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .searchContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .buscadorHistorial {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .buscarHistorial {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .buscarHistorial:hover {
+    background-color: #45a049;
+  }
+  
+  label {
+    font-size: 14px;
+  }
+  
+  .gridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .gridItem {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+  }
+  
+  .gridItem p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .gridItem p:first-child {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .gridItem p:last-child {
+    white-space: normal;
+    word-wrap: break-word;
+  }
+  
+  .reporteContainer {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .searchContainer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .gridContainer {
+      grid-template-columns: 1fr;
+    }
+  
+    .gridItem {
+      padding: 10px;
+    }
+  
+    .buscadorHistorial {
+      max-width: 100%;
+    }
+  
+    .buscarHistorial {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+  
