@@ -156,13 +156,15 @@ function Examenes() {
           )}
         </div>
         <div className="inputFile">
-          <FileUploader
+          {!resultado ? <p>Busque un paciente antes de agregar un examen</p> : 
+            <FileUploader
             multiple={false}
             handleChange={handleChange}
             name="image"
             types={fileTypes}
             uploadedLabel="Imagen Subida"
           />
+          }
         </div>
         {file && (
           <div className="shadow">
