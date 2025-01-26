@@ -8,16 +8,10 @@ function Pacientes() {
     identidadPaciente: "",
     fechaNacimiento: "",
     sexo: "",
-    estadoCivil: "",
+    estadoCivil: "undefined",
+    lugarProcedencia: "",
+    edad: 0,  // Agregamos la propiedad de edad
   });
-
-  const handleName = (e) => {
-    const { name, value } = e.target;
-    setFormulario({
-      ...formulario,
-      [name]: value.toUpperCase(),
-    });
-  };
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -27,8 +21,28 @@ function Pacientes() {
     });
   };
 
+  const calcularEdad = (fechaNacimiento) => {
+    const nacimiento = new Date(fechaNacimiento);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth();
+    const dia = hoy.getDate();
+    if (mes < nacimiento.getMonth() || (mes === nacimiento.getMonth() && dia < nacimiento.getDate())) {
+      edad--;
+    }
+    return edad;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Calculamos la edad antes de enviar el formulario
+    const edadCalculada = calcularEdad(formulario.fechaNacimiento);
+    setFormulario({
+      ...formulario,
+      edad: edadCalculada,
+    });
+    
     console.log("formulario antes de enviar", formulario);
     try {
       const response = await fetch("http://localhost:5000/api/pacientes", {
@@ -39,13 +53,13 @@ function Pacientes() {
         body: JSON.stringify(formulario),
       });
       if (response.ok) {
-        alert("datos enviados correctamente");
+        alert("Datos enviados correctamente");
       } else {
-        alert("error al enviar datos");
+        alert("Error al enviar datos");
       }
     } catch (error) {
       console.log(error);
-      alert("Error en la conexion con el servidor");
+      alert("Error en la conexión con el servidor");
     }
   };
 
@@ -61,7 +75,7 @@ function Pacientes() {
             id="nombrePaciente"
             name="nombrePaciente"
             value={formulario.nombrePaciente}
-            onChange={handleName}
+            onChange={handleInput}
             placeholder="nombre completo"
           />
           <label>Numero de identidad</label>
@@ -73,7 +87,7 @@ function Pacientes() {
             onChange={handleInput}
             placeholder="ingrese la identidad"
           />
-          <label>fecha nacimiento</label>
+          <label>Fecha nacimiento</label>
           <input
             required
             type="date"
@@ -83,6 +97,10 @@ function Pacientes() {
             onChange={handleInput}
             placeholder="ingrese la fecha de nacimiento"
           />
+          <br/>
+          {formulario.fechaNacimiento && (
+            <strong>Edad: {calcularEdad(formulario.fechaNacimiento)}</strong>
+          )}
           <br />
           <fieldset>
             <legend>Sexo</legend>
@@ -108,7 +126,7 @@ function Pacientes() {
             <label>Femenino</label>
           </fieldset>
           <br />
-          <fieldset>
+          {/* <fieldset>
             <legend>Estado civil</legend>
             <input
               required
@@ -149,10 +167,19 @@ function Pacientes() {
               checked={formulario.estadoCivil === "divorciado"}
               onChange={handleInput}
             />
-            <label>divorciado</label>
-          </fieldset>
+            <label>Divorciado</label>
+          </fieldset> */}
+          <label>lugar Procedencia</label>
+          <input
+            required
+            id="lugarProcedencia"
+            name="lugarProcedencia"
+            value={formulario.lugarProcedencia}
+            onChange={handleInput}
+            placeholder="ingresar"
+          />
           <br />
-          <button type="submit">agregar</button>
+          <button type="submit">Agregar</button>
         </form>
       </div>
     </>

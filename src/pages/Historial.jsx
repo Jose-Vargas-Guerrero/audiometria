@@ -7,7 +7,8 @@ function Historial() {
   const [examenes, setExamenes] = useState([]);
   const [identidadPaciente, setIdentidadPaciente] = useState("");
   const [nombrePaciente, setNombrePaciente] = useState("");
-  const [isBusquedaPorNombre, setIsBusquedaPorNombre] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [isBusquedaPorNombre, setIsBusquedaPorNombre] = useState(true);
 
   useEffect(() => {
     fetchExamenes(); // Fetch all exams on component mount
@@ -39,13 +40,17 @@ function Historial() {
     fetchExamenes();
   };
 
+  const handleSearchTodos = () => {
+    setNombrePaciente("")
+    fetchExamenes();
+  };
+
   return (
     <div className="examenesContainer">
       <Home />
       <h1>Registro de Exámenes</h1>
-
       <div className="searchContainer">
-        <button className="todos" onClick={handleSearch}>
+        <button className="todos" onClick={handleSearchTodos}>
           todos
         </button>
         <input
@@ -66,14 +71,14 @@ function Historial() {
         <button className="buscarHistorial" onClick={handleSearch}>
           Buscar
         </button>
-        <label>
+        {/* <label>
           <input
             type="checkbox"
             checked={isBusquedaPorNombre}
             onChange={() => setIsBusquedaPorNombre(!isBusquedaPorNombre)}
           />
           Buscar por nombre
-        </label>
+        </label> */}
       </div>
 
       <div className="gridContainer">

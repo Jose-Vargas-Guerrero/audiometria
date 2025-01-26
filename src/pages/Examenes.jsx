@@ -47,15 +47,18 @@ function Examenes() {
     console.log(examen);
   };
 
-  const [identidadPaciente, setIdentidadPaciente] = useState("");
+  const [nombrePaciente, setNombrePaciente] = useState("")
+/*   const [identidadPaciente, setIdentidadPaciente] = useState(""); */
   const [resultado, setResultado] = useState(null);
   const [error, setError] = useState("");
 
+
+  //funcion que busca el paciente
   const handleSearch = async () => {
     try {
-      const cleanIdentidad = identidadPaciente.trim();
+      const cleanNombre = nombrePaciente.trim();
       const response = await fetch(
-        `http://localhost:5000/api/pacientes/${cleanIdentidad}`
+        `http://localhost:5000/api/pacientes/${cleanNombre}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -103,15 +106,6 @@ function Examenes() {
 
       if (response.ok) {
         alert("Examen guardado correctamente");
-        setFile(null);
-        setExamen({
-          nombre: "",
-          edad: 0,
-          fechaExamen: getCurrentDate(),
-          observaciones: "",
-          recomendaciones: "",
-          idPaciente: null,
-        });
       } else {
         const errorText = await response.text();
         alert(`Error al guardar el examen: ${errorText}`);
@@ -134,12 +128,12 @@ function Examenes() {
           <input
             className="buscador"
             type="text"
-            placeholder="Identidad sin guiones"
-            value={identidadPaciente}
+            placeholder="Ingrese nombre de paciente"
+            value={nombrePaciente}
             name="identidadPaciente"
             id="identidadPaciente"
             required
-            onChange={(e) => setIdentidadPaciente(e.target.value)}
+            onChange={(e) => setNombrePaciente(e.target.value)}
           />
           <button onClick={handleSearch} className="buscarPaciente">
             Buscar
@@ -155,6 +149,7 @@ function Examenes() {
             </div>
           )}
         </div>
+        <iframe src="https://audsim.com/audgenJS/audgenjs.html" width="100%" height="600"></iframe>
         <div className="inputFile">
           {!resultado ? <p>Busque un paciente antes de agregar un examen</p> : 
             <FileUploader
