@@ -3,7 +3,7 @@ import sql from 'mssql';
 //configuracion de conexion
 const dbConfig = {
     user: 'usersql4',
-    password: '123456',
+    password: '12345',
     server: 'localhost',
     database: 'centroOtaudiologicoSur',
     options: {

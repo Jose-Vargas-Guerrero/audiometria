@@ -16,6 +16,7 @@ app.post("/api/pacientes", async (req, res) => {
       fechaNacimiento,
       sexo,
       estadoCivil,
+      lugarProcedencia,
     } = req.body;
     const pool = await poolPromise;
 
@@ -27,8 +28,9 @@ app.post("/api/pacientes", async (req, res) => {
       .input("fechaNacimiento", sql.Date, fechaNacimiento)
       .input("sexo", sql.VarChar, sexo)
       .input("estadoCivil", sql.VarChar, estadoCivil)
+      .input("lugarProcedencia", sql.VarChar, lugarProcedencia)
       .query(
-        "INSERT INTO Pacientes (nombrePaciente, identidadPaciente, fechaNacimiento, sexo, estadoCivil) VALUES (@nombrePaciente, @identidadPaciente, @fechaNacimiento, @sexo, @estadoCivil)"
+        "INSERT INTO Pacientes (nombrePaciente, identidadPaciente, fechaNacimiento, sexo, estadoCivil, lugarProcedencia) VALUES (@nombrePaciente, @identidadPaciente, @fechaNacimiento, @sexo, @estadoCivil, @lugarProcedencia)"
       );
 
     res.status(200).send("Datos insertados correctamente");
@@ -38,7 +40,7 @@ app.post("/api/pacientes", async (req, res) => {
   }
 });
 
-//query para buscar pacientes
+/* //query para buscar pacientes pon numero de identidad
 app.get("/api/pacientes/:identidadPaciente", async (req, res) => {
   try {
     const { identidadPaciente } = req.params;
@@ -76,7 +78,51 @@ app.get("/api/pacientes/:identidadPaciente", async (req, res) => {
     console.error("Error al buscar el paciente:", error);
     res.status(500).send("error al buscar el paciente");
   }
+}); */
+
+// Query para buscar pacientes por nombre devuelve solo 1
+app.get("/api/pacientes/:nombrePaciente", async (req, res) => {
+  try {
+    const { nombrePaciente } = req.params;
+    console.log("Valor recibido:", nombrePaciente);
+
+    const pool = await poolPromise;
+    const result = await pool
+      .request()
+      .input("nombrePaciente", sql.VarChar, nombrePaciente)
+      .query(
+        `SELECT 
+               idPaciente, 
+               nombrePaciente, 
+               fechaNacimiento, 
+               DATEDIFF(YEAR, fechaNacimiento, GETDATE()) -
+               CASE 
+                 WHEN MONTH(fechaNacimiento) > MONTH(GETDATE()) OR 
+                      (MONTH(fechaNacimiento) = MONTH(GETDATE()) AND DAY(fechaNacimiento) > DAY(GETDATE()))
+                 THEN 1 
+                 ELSE 0 
+               END AS edad
+             FROM Pacientes 
+             WHERE nombrePaciente = @nombrePaciente`
+      );
+
+    console.log("Resultado de la consulta:", result.recordset);
+
+    if (result.recordset.length === 0) {
+      console.log("Paciente no encontrado");
+      return res.status(404).send("paciente no encontrado");
+    }
+
+    res.status(200).json(result.recordset[0]);
+  } catch (error) {
+    console.error("Error al buscar el paciente:", error);
+    res.status(500).send("error al buscar el paciente");
+  }
 });
+
+
+
+
 
 //agregar examenes
 app.post("/api/examenes", async (req, res) => {
